@@ -1,14 +1,24 @@
 package com.nicebao.chatroom.controller;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Created by IhaveBB on 2024/8/13 17:52
- * @author IhaveBB
- */
-@Controller
+ * @name: UserController
+ * @author: IhaveBB
+ * @date: 2024-08-14 00:48
+ * @description: 用户api
+ **/
+@RestController
+@RequestMapping("/user")
 public class UserController {
 	@RequestMapping("/login")
-	public
+	public String login() {
+		return "login";
+	}
+	@RequestMapping("/register")
+	public int hello() {
+		int i = 9/0;
+		return i;
+	}
 }

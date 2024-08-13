@@ -15,8 +15,8 @@ import lombok.Data;
 @Builder
 public class ResponseResult<T> {
 	private Integer code;
-	private String msg;
 	private long timestamp;
+	private String msg;
 	private T data;
 
 	public static <T> ResponseResult<T> success(T data) {
