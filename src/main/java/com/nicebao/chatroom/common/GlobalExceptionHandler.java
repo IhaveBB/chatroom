@@ -3,6 +3,7 @@ package com.nicebao.chatroom.common;
 import com.nicebao.chatroom.enums.ResultCodeEnum;
 import com.nicebao.chatroom.exception.ServiceException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -49,6 +50,12 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(ServiceException.class)
 	public  ResponseResult<String> HandleInvalidLoginException(ServiceException ex){
 		return ResponseResult.fail(ex.getErrorCode(), ex.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.OK)
+	@ExceptionHandler(DuplicateKeyException.class)
+	public ResponseResult<String> handleDuplicateKeyException(DuplicateKeyException ex){
+		return ResponseResult.fail(ResultCodeEnum.USER_REGISTER_EXISTS.getCode(), ResultCodeEnum.USER_REGISTER_EXISTS.getMessage());
 	}
 }
 /*

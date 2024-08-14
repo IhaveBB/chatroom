@@ -19,7 +19,7 @@ public enum ResultCodeEnum implements BaseErrorInfoInterface {
 	/* 用户错误 2001-2999*/
 	USER_NOTLOGGED_IN(2001, "用户未登录"),
 	USER_LOGIN_ERROR(2002, "账号不存在或密码错误"),
-
+	USER_REGISTER_EXISTS(2003,"用户名已存在"),
 	/*系统错误*/
 	SYSTEM_ERROR(10000, "系统异常，请稍后重试"),
 	REGISTER_ERROR(10001,"注册异常，请稍后重试")
