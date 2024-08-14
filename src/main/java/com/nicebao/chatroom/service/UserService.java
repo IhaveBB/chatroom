@@ -2,6 +2,7 @@ package com.nicebao.chatroom.service;
 
 import com.nicebao.chatroom.dao.UserMapper;
 import com.nicebao.chatroom.dto.LoginRequest;
+import com.nicebao.chatroom.dto.RegisterRequest;
 import com.nicebao.chatroom.enums.ResultCodeEnum;
 import com.nicebao.chatroom.exception.ServiceException;
 import com.nicebao.chatroom.model.User;
@@ -34,5 +35,22 @@ public class UserService {
 		session.setAttribute("user", user);
 		user.setPassword("");
 		return user;
+	}
+
+	public Integer register(RegisterRequest request) {
+		User user = new User();
+		user.setUsername(request.getUsername());
+		user.setPassword(request.getPassword());
+		user.setEmail(request.getEmail());
+		user.setGender(request.getGender());
+		user.setIsActive(true);
+		//普通用户1
+		//管理员用户2
+		user.setRoleId(1);
+		int ret = userMapper.insertUser(user);
+		if(ret > 0){
+			return ret;
+		}
+		throw new ServiceException(ResultCodeEnum.REGISTER_ERROR);
 	}
 }

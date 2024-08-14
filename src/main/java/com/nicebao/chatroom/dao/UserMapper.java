@@ -1,8 +1,8 @@
 package com.nicebao.chatroom.dao;
 
+import com.nicebao.chatroom.dto.RegisterRequest;
 import com.nicebao.chatroom.model.User;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
 
 /**
  * @name: UserMapper
@@ -11,6 +11,6 @@ import org.apache.ibatis.annotations.Select;
  **/
 @Mapper
 public interface UserMapper {
-	@Select("SELECT * FROM user WHERE username = #{username}")
 	User selectByName(String username);
+	int insertUser(User user);
 }
