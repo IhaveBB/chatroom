@@ -6,14 +6,15 @@ package com.nicebao.chatroom.enums;
  * @date: 2024-08-14 00:49
  * @description: 状态码枚举
  **/
-public enum ResultCodeEnum {
+public enum ResultCodeEnum implements BaseErrorInfoInterface {
 	Success(200,"success"),
 
 	/*1001-1999参数错误*/
-	PARAM_IS_INVALID(1001, "参数无效"),
-	PARAM_IS_BLANK(1002, "参数为空"),
-	PARAM_TYPE_BIND_ERROR(1003, "参数类型错误"),
-	PARAM_NOT_COMPLETE(1004, "参数缺失"),
+	PARAM_IS_ERROR(1001,"参数错误"),
+	PARAM_IS_INVALID(1002, "参数无效"),
+	PARAM_IS_BLANK(1003, "参数为空"),
+	PARAM_TYPE_BIND_ERROR(1004, "参数类型错误"),
+	PARAM_NOT_COMPLETE(1005, "参数缺失"),
 
 	/* 用户错误 2001-2999*/
 	USER_NOTLOGGED_IN(2001, "用户未登录"),
@@ -33,10 +34,11 @@ public enum ResultCodeEnum {
 		this.message = message;
 	}
 
+	@Override
 	public int getCode() {
 		return code;
 	}
-
+	@Override
 	public String getMessage() {
 		return message;
 	}

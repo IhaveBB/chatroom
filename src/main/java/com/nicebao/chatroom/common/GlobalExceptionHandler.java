@@ -1,8 +1,11 @@
 package com.nicebao.chatroom.common;
 
 import com.nicebao.chatroom.enums.ResultCodeEnum;
+import com.nicebao.chatroom.exception.ServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -18,10 +21,34 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 	@ExceptionHandler(Exception.class)
-	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-	public ResponseResult<String> handleException(Exception e) {
-		log.error("全局异常信息 ex={}", e.getMessage(), e);
-		return ResponseResult.fail(ResultCodeEnum.SYSTEM_ERROR.getCode(), e.getMessage());
+	@ResponseStatus(HttpStatus.OK)
+	public ResponseResult<String> handleException(Exception ex) {
+		log.error("全局异常信息 ex={}", ex.getMessage(), ex);
+		return ResponseResult.fail(ResultCodeEnum.SYSTEM_ERROR.getCode(), ex.getMessage());
+	}
+	/** 
+	* @description: 捕获vaild参数校验错误
+	* @param: [org.springframework.web.bind.MethodArgumentNotValidException]
+	* @return: com.nicebao.chatroom.common.ResponseResult<java.lang.String>
+	* @author: IhaveBB
+	* @date: 2024/8/14
+	**/
+	@ResponseStatus(HttpStatus.OK)
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseResult<String> HandleMethodArgumentNotValidException(MethodArgumentNotValidException ex){
+		StringBuilder errorMessage = new StringBuilder();
+		log.info("valid捕获错误信息 ex={}", ex.getMessage(), ex);
+		ex.getBindingResult().getAllErrors().forEach((error) -> {
+			String fieldName = ((FieldError) error).getField();
+			String errorMsg = error.getDefaultMessage();
+			errorMessage.append(fieldName).append(": ").append(errorMsg).append("; ");
+		});
+		return ResponseResult.fail(ResultCodeEnum.PARAM_IS_ERROR.getCode(),errorMessage.toString());
+	}
+	@ResponseStatus(HttpStatus.OK)
+	@ExceptionHandler(ServiceException.class)
+	public  ResponseResult<String> HandleInvalidLoginException(ServiceException ex){
+		return ResponseResult.fail(ex.getErrorCode(), ex.getMessage());
 	}
 }
 /*
