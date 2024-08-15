@@ -4,6 +4,7 @@ import com.nicebao.chatroom.dao.MessageMapper;
 import com.nicebao.chatroom.enums.ResultCodeEnum;
 import com.nicebao.chatroom.exception.ServiceException;
 import com.nicebao.chatroom.model.Friend;
+import com.sun.org.apache.regexp.internal.RE;
 import com.sun.xml.internal.bind.v2.TODO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +46,15 @@ public class MessageService {
 		List<Integer> MessageSessionIdList = messageMapper.getMessageSessionListByUserId(userId);
 		return MessageSessionIdList;
 	}
-
-	public List<Friend> getFriendBySessionId(Integer sessionId) {
-
+	/** 
+	* @description: 根据用户获取的SessionId，来获取到这个会话（sessionId）包含了哪些用户，排除最初的自己
+	* @param: [java.lang.Integer, java.lang.Integer]
+	* @return: java.util.List<com.nicebao.chatroom.model.Friend>
+	* @author: IhaveBB
+	* @date: 2024/8/16 
+	**/
+	public List<Friend> getMessageSessionFriendsBySessionId(Integer sessionId, Integer selfUserId) {
+		List<Friend> friends = messageMapper.getMessageSessionFriendsBySessionId(sessionId,selfUserId);
+		return friends;
 	}
 }

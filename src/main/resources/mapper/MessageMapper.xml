@@ -2,7 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.nicebao.chatroom.dao.MessageMapper">
+<!--    需要注意按照时间来排序，如果不排序写括号里的即可-->
     <select id="getMessageSessionListByUserId" resultType="integer">
-        select sessionId from message_session_user where userId = #{userId};
+        select sessionId from message_session
+        where sessionId in
+              (select sessionId from message_session_user where userId = #{userId})
+        order by lastTime desc
+    </select>
+    <select id="getMessageSessionFriendsBySessionId" resultType="com.nicebao.chatroom.model.Friend">
+        select userid as friendId,username as friendName from user
+        where userid in
+              (select userId from message_session_user where sessionId = #{sessionId} and userId != #{selfUserId});
     </select>
 </mapper>
