@@ -73,5 +73,21 @@ public class UserService {
 		return user;
 	}
 
-
+	/**
+	* @description: 检测UserId是否存在
+	* @param: [java.lang.Integer]
+	* @return: boolean
+	* @author: IhaveBB
+	* @date: 2024/8/16
+	**/
+	public boolean isUserIdExist(Integer userId) {
+		if(userId == null || userId <= 0){
+			return false;
+		}
+		int count = userMapper.isUserIdExists(userId);
+		if(count <= 0){
+			return false;
+		}
+		return true;
+	}
 }
