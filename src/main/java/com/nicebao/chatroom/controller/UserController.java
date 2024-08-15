@@ -3,18 +3,18 @@ package com.nicebao.chatroom.controller;
 import com.nicebao.chatroom.common.ResponseResult;
 import com.nicebao.chatroom.dto.LoginRequest;
 import com.nicebao.chatroom.dto.RegisterRequest;
+import com.nicebao.chatroom.enums.ResultCodeEnum;
 import com.nicebao.chatroom.model.User;
 import com.nicebao.chatroom.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.Registration;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import javax.xml.ws.http.HTTPBinding;
 
 /**
  * @name: UserController
@@ -40,8 +40,12 @@ public class UserController {
 	@PostMapping("/register")
 	public ResponseResult<Integer> register(@Valid @RequestBody RegisterRequest request){
 		int ret = userService.register(request);
-		log.info(request.toString());
 		return ResponseResult.success(ret);
 	}
-
+	@GetMapping("/userInfo")
+	public ResponseResult<User> getUserInfo(HttpServletRequest req){
+		HttpSession session = req.getSession(false);
+		User user = userService.getUserFromSession(session);
+		return ResponseResult.success(user);
+	}
 }

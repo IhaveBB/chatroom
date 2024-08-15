@@ -1,5 +1,6 @@
 package com.nicebao.chatroom.service;
 
+import com.nicebao.chatroom.common.ResponseResult;
 import com.nicebao.chatroom.dao.UserMapper;
 import com.nicebao.chatroom.dto.LoginRequest;
 import com.nicebao.chatroom.dto.RegisterRequest;
@@ -52,5 +53,19 @@ public class UserService {
 			return ret;
 		}
 		throw new ServiceException(ResultCodeEnum.REGISTER_ERROR);
+	}
+
+	public User getUserFromSession(HttpSession session) {
+		if(session == null){
+			log.debug("session is null");
+			throw new ServiceException(ResultCodeEnum.USER_NOTLOGGED_IN);
+		}
+		User user = (User) session.getAttribute("user");
+		if (user == null){
+			log.debug("user is null");
+			throw new ServiceException(ResultCodeEnum.USER_NOTLOGGED_IN);
+		}
+		user.setPassword("");
+		return user;
 	}
 }
