@@ -1,6 +1,5 @@
 package com.nicebao.chatroom.dao;
 
-import com.nicebao.chatroom.dto.RegisterRequest;
 import com.nicebao.chatroom.model.User;
 import org.apache.ibatis.annotations.Mapper;
 

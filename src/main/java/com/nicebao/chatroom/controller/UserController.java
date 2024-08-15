@@ -4,6 +4,7 @@ import com.nicebao.chatroom.common.ResponseResult;
 import com.nicebao.chatroom.dto.LoginRequest;
 import com.nicebao.chatroom.dto.RegisterRequest;
 import com.nicebao.chatroom.enums.ResultCodeEnum;
+import com.nicebao.chatroom.model.Friend;
 import com.nicebao.chatroom.model.User;
 import com.nicebao.chatroom.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import javax.xml.ws.http.HTTPBinding;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @name: UserController
@@ -48,4 +51,5 @@ public class UserController {
 		User user = userService.getUserFromSession(session);
 		return ResponseResult.success(user);
 	}
+
 }
