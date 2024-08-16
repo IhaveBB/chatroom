@@ -3,6 +3,7 @@ package com.nicebao.chatroom.service;
 import com.nicebao.chatroom.dao.MessageSessionMapper;
 import com.nicebao.chatroom.enums.ResultCodeEnum;
 import com.nicebao.chatroom.exception.ServiceException;
+import com.nicebao.chatroom.model.AcceptMessageSessionId;
 import com.nicebao.chatroom.model.Friend;
 import com.nicebao.chatroom.model.MessageSession;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +23,7 @@ import java.util.List;
 @Slf4j
 public class MessageSessionService {
 	@Autowired
-	private MessageSessionMapper messageMapper;
+	private MessageSessionMapper messageSessionMapper;
 	@Autowired
 	private MessageService messageService;
 	@Autowired
@@ -46,7 +47,7 @@ public class MessageSessionService {
 		if(userService.isUserIdExist(userId) == false){
 			throw new ServiceException(ResultCodeEnum.PARAM_IS_ERROR);
 		}
-		List<Integer> MessageSessionIdList = messageMapper.getMessageSessionListByUserId(userId);
+		List<Integer> MessageSessionIdList = messageSessionMapper.getMessageSessionListByUserId(userId);
 		return MessageSessionIdList;
 	}
 	/** 
@@ -57,7 +58,7 @@ public class MessageSessionService {
 	* @date: 2024/8/16 
 	**/
 	public List<Friend> getMessageSessionFriendsBySessionId(Integer sessionId, Integer selfUserId) {
-		List<Friend> friends = messageMapper.getMessageSessionFriendsBySessionId(sessionId,selfUserId);
+		List<Friend> friends = messageSessionMapper.getMessageSessionFriendsBySessionId(sessionId,selfUserId);
 		return friends;
 	}
 	/**
@@ -92,5 +93,26 @@ public class MessageSessionService {
 			messageSessionList.add(messageSession);
 		}
 		return messageSessionList;
+	}
+
+	public Integer addMessageSession(Integer otherId,Integer userId){
+		//先插入数据到message_session表,创建出会话后获取到会话的Id
+		//如果我们要获取数据库的自增值，需要创建一个对象来接受
+		AcceptMessageSessionId acceptMessageSessionId = new AcceptMessageSessionId();
+		int ret = messageSessionMapper.addMessageSession(acceptMessageSessionId);
+		Integer messageSessionId = acceptMessageSessionId.getSessionId();
+		if(messageSessionId == null || messageSessionId <= 0 || ret <= 0){
+			log.warn("message_session表:创建会话失败，messageSessionId为{},数据库操作结果ret为{}",acceptMessageSessionId,ret);
+			throw new ServiceException(ResultCodeEnum.SYSTEM_ERROR);
+		}
+		//给message_session_user表插入数据
+		int ret2 = messageSessionMapper.addMessageSessionUser(messageSessionId,userId);
+		int ret3 = messageSessionMapper.addMessageSessionUser(messageSessionId,otherId);
+		if(ret2 <= 0 && ret3 <= 0){
+			log.warn("message_session_user表:会话插入用户失败，影响行数为:{},{}",ret2,ret3);
+			throw new ServiceException(ResultCodeEnum.SYSTEM_ERROR);
+		}
+		log.info("addMessageSession:会话创建成功,sessionId={},user1={},user2={}",messageSessionId,userId,otherId);
+		return messageSessionId;
 	}
 }

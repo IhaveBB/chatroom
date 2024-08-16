@@ -2,7 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.nicebao.chatroom.dao.MessageSessionMapper">
-<!--    需要注意按照时间来排序，如果不排序写括号里的即可-->
+    <insert id="addMessageSession">
+        insert into message_session values(null, now());
+    </insert>
+    <insert id="addMessageSessionUser">
+        insert into message_session_user values(#{sessionId}, #{userId})
+    </insert>
+    <!--    需要注意按照时间来排序，如果不排序写括号里的即可-->
     <select id="getMessageSessionListByUserId" resultType="integer">
         select sessionId from message_session
         where sessionId in

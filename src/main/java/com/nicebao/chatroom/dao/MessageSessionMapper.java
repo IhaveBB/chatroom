@@ -1,6 +1,8 @@
 package com.nicebao.chatroom.dao;
 
+import com.nicebao.chatroom.model.AcceptMessageSessionId;
 import com.nicebao.chatroom.model.Friend;
+import com.nicebao.chatroom.model.MessageSession;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -18,4 +20,6 @@ public interface MessageSessionMapper {
 	List<Integer> getMessageSessionListByUserId(Integer userId);
 	//根据用户获取的SessionId，来获取到这个会话（sessionId）包含了哪些用户，排除最初的自己
 	List<Friend> getMessageSessionFriendsBySessionId(@Param("sessionId")Integer sessionId, @Param("selfUserId") Integer selfUserId);
+	int addMessageSession(AcceptMessageSessionId acceptMessageSessionId);
+	int addMessageSessionUser(@Param("sessionId")Integer sessionId, @Param("userId")Integer userId);
 }
