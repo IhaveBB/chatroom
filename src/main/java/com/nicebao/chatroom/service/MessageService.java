@@ -1,9 +1,12 @@
 package com.nicebao.chatroom.service;
 
 import com.nicebao.chatroom.dao.MessageMapper;
+import com.nicebao.chatroom.model.Message;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @name: MessageService
@@ -26,5 +29,10 @@ public class MessageService {
 	public String getLastMessageBySessionId(Integer sessionId){
 		String lastMessage = messageMapper.selectLastMessageBySessionId(sessionId);
 		return lastMessage;
+	}
+
+	public List<Message> getMessageBySessionId(Integer sessionId){
+		List<Message> messages = messageMapper.getMessageBySessionId(sessionId);
+		return messages;
 	}
 }

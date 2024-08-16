@@ -6,4 +6,11 @@
     <select id="selectLastMessageBySessionId" resultType="string">
         select content from message where sessionId = #{sessionId} order by postTime desc limit 1
     </select>
+    <select id="getMessageBySessionId" resultType="com.nicebao.chatroom.model.Message">
+        select message.messageId,message.fromId,user.username as fromName
+             ,message.sessionId,message.content,message.postTime
+        from user,message
+        where user.userId = message.fromId and message.sessionId = #{sessionId}
+        order by postTime desc limit 100;
+    </select>
 </mapper>

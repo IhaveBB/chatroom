@@ -1,7 +1,10 @@
 package com.nicebao.chatroom.dao;
 
+import com.nicebao.chatroom.model.Message;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 /**
  * @name: MessageMapper
@@ -11,4 +14,6 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface MessageMapper {
 	String selectLastMessageBySessionId(Integer sessionId);
+
+	List<Message> getMessageBySessionId(Integer sessionId);
 }
