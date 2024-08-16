@@ -96,6 +96,12 @@ public class MessageSessionService {
 	}
 
 	public Integer addMessageSession(Integer otherId,Integer userId){
+		//先检查一下用户和创建对象ID的有效性再创建会话
+		//防止有一个ID是空的，导致创建出来的会话里只有一个人
+		if(userService.isUserIdExist(otherId) == false || userService.isUserIdExist(userId) == false){
+			log.warn("ID缺失：otherId={},userId={}",otherId,userId);
+			throw new ServiceException(ResultCodeEnum.PARAM_IS_ERROR);
+		}
 		//先插入数据到message_session表,创建出会话后获取到会话的Id
 		//如果我们要获取数据库的自增值，需要创建一个对象来接受
 		AcceptMessageSessionId acceptMessageSessionId = new AcceptMessageSessionId();
