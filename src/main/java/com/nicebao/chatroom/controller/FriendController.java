@@ -2,6 +2,7 @@ package com.nicebao.chatroom.controller;
 
 import com.nicebao.chatroom.common.ResponseResult;
 import com.nicebao.chatroom.model.Friend;
+import com.nicebao.chatroom.model.User;
 import com.nicebao.chatroom.service.FriendService;
 import com.nicebao.chatroom.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -33,5 +34,12 @@ public class FriendController {
 		List<Friend> friends = friendService.getFriendList(session);
 		log.info(friends.toString());
 		return ResponseResult.success(friends);
+	}
+	@GetMapping("/isExistMessageSession")
+	public ResponseResult<Boolean> isExistMessageSession(HttpServletRequest req,Integer friendId){
+		HttpSession session = req.getSession(false);
+		User user = (User) session.getAttribute("user");
+		boolean ret = friendService.isExistMessageSession(user.getUserId(),friendId);
+		return ResponseResult.success(ret);
 	}
 }

@@ -34,7 +34,9 @@ public class MessageSessionController {
 
 	@GetMapping("/getMessageSessionList")
 	public List<MessageSession> getMessageSessionList(HttpServletRequest request) {
+		log.info("getMessageSessionList获取到请求");
 		HttpSession session = request.getSession(false);
+		log.info("getMessageSessionList获取到请求,sessionId为" + session.toString());
 		User user = userService.getUserFromSession(session);
 		messageSessionService.getMessageSessionListByUserId(user.getUserId());
 

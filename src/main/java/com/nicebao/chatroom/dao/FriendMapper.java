@@ -2,6 +2,7 @@ package com.nicebao.chatroom.dao;
 
 import com.nicebao.chatroom.model.Friend;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -13,4 +14,5 @@ import java.util.List;
 @Mapper
 public interface FriendMapper {
 	List<Friend> getFriendListById(int userId);
+	Integer isExistMessageSession(@Param("userId")Integer userId, @Param("friendId")Integer friendId);
 }

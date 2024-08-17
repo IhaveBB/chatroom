@@ -1,6 +1,7 @@
 package com.nicebao.chatroom.service;
 
 import com.nicebao.chatroom.dao.FriendMapper;
+import com.nicebao.chatroom.dao.UserMapper;
 import com.nicebao.chatroom.enums.ResultCodeEnum;
 import com.nicebao.chatroom.exception.ServiceException;
 import com.nicebao.chatroom.model.Friend;
@@ -36,5 +37,13 @@ public class FriendService {
 		List<Friend> friends = friendMapper.getFriendListById(user.getUserId());
 		log.info(friends.toString());
 		return friends;
+	}
+
+	public boolean isExistMessageSession(Integer userId, Integer friendId) {
+		Integer ret = friendMapper.isExistMessageSession(userId,friendId);
+		if(ret == null || ret == 0){
+			return false;
+		}
+		return true;
 	}
 }

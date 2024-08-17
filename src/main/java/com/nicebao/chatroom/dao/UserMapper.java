@@ -2,6 +2,7 @@ package com.nicebao.chatroom.dao;
 
 import com.nicebao.chatroom.model.User;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * @name: UserMapper

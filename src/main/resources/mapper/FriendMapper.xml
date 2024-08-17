@@ -7,5 +7,11 @@
         where userId in
               (select friendId from friend where userId = #{userId})
     </select>
-
+    <select id="isExistMessageSession" resultType="integer">
+        SELECT sessionId
+        FROM message_session_user
+        WHERE message_session_user.userId IN (#{userId}, #{friendId})
+        GROUP BY sessionId
+        HAVING COUNT(DISTINCT userId) = 2;
+    </select>
 </mapper>

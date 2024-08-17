@@ -11,6 +11,6 @@
              ,message.sessionId,message.content,message.postTime
         from user,message
         where user.userId = message.fromId and message.sessionId = #{sessionId}
-        order by postTime desc limit 100;
+        order by postTime asc limit 100;
     </select>
 </mapper>
