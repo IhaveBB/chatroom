@@ -36,10 +36,11 @@ public class FriendController {
 		return ResponseResult.success(friends);
 	}
 	@GetMapping("/isExistMessageSession")
-	public ResponseResult<Boolean> isExistMessageSession(HttpServletRequest req,Integer friendId){
+	public ResponseResult<Integer> isExistMessageSession(HttpServletRequest req,Integer friendId){
 		HttpSession session = req.getSession(false);
 		User user = (User) session.getAttribute("user");
-		boolean ret = friendService.isExistMessageSession(user.getUserId(),friendId);
+		Integer ret = friendService.isExistMessageSession(user.getUserId(),friendId);
 		return ResponseResult.success(ret);
 	}
+
 }

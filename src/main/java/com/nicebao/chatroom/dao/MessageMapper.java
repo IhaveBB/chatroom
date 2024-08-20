@@ -16,4 +16,6 @@ public interface MessageMapper {
 	String selectLastMessageBySessionId(Integer sessionId);
 
 	List<Message> getMessageBySessionId(Integer sessionId);
+
+	int addMessage(Message message);
 }

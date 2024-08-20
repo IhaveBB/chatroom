@@ -35,4 +35,8 @@ public class MessageService {
 		List<Message> messages = messageMapper.getMessageBySessionId(sessionId);
 		return messages;
 	}
+
+	public int addMessage(Message message){
+		return messageMapper.addMessage(message);
+	}
 }

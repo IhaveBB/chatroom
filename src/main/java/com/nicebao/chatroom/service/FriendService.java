@@ -39,11 +39,9 @@ public class FriendService {
 		return friends;
 	}
 
-	public boolean isExistMessageSession(Integer userId, Integer friendId) {
+	public Integer isExistMessageSession(Integer userId, Integer friendId) {
 		Integer ret = friendMapper.isExistMessageSession(userId,friendId);
-		if(ret == null || ret == 0){
-			return false;
-		}
-		return true;
+		return ret;
 	}
+
 }

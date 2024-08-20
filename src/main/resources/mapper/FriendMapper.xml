@@ -14,4 +14,9 @@
         GROUP BY sessionId
         HAVING COUNT(DISTINCT userId) = 2;
     </select>
+    <select id="getMessageSessionFriendsBSessionId" resultType="com.nicebao.chatroom.model.Friend">
+        select userId as friendId, username as friendName from user
+        where userId in
+              (select userId from message_session_user where sessionId = #{sessionId})
+    </select>
 </mapper>

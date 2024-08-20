@@ -2,6 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.nicebao.chatroom.dao.MessageMapper">
+    <insert id="addMessage">
+        insert into message values(null, #{fromId}, #{sessionId}, #{content}, now())
+    </insert>
     <!--    需要注意按照时间来排序，如果不排序写括号里的即可-->
     <select id="selectLastMessageBySessionId" resultType="string">
         select content from message where sessionId = #{sessionId} order by postTime desc limit 1
