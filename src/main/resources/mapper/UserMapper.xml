@@ -10,7 +10,9 @@
         INSERT INTO user (username, password, email, gender, is_active, role_id)
         VALUES (#{username}, #{password}, #{email}, #{gender}, #{isActive}, #{roleId})
     </insert>
-    <select id="isUserIdExists" resultType="int">
-        select * from user where userId = #{userId}
+    <select id="isUserIdExists" resultType="integer">
+        SELECT COUNT(*)
+        FROM user
+        WHERE userId = #{userId}
     </select>
 </mapper>

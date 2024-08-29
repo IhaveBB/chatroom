@@ -1,8 +1,5 @@
 package com.nicebao.chatroom.component;
 
-import com.nicebao.chatroom.enums.ResultCodeEnum;
-import com.nicebao.chatroom.exception.ServiceException;
-import com.sun.org.apache.regexp.internal.RE;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
@@ -17,33 +14,32 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 @Component
 public class OnlineUserManager {
-	private ConcurrentHashMap<Integer, WebSocketSession> sessions = new ConcurrentHashMap<Integer,WebSocketSession>();
+	private final ConcurrentHashMap<Integer, WebSocketSession> sessions = new ConcurrentHashMap<>(); // 使用泛型钻石操作符
 
 	public void addUser(int userId, WebSocketSession session) {
-		if(sessions.get(userId) != null){
-			log.info("UserID:{}，已登录，连接建立失败!",userId);
-			//throw new ServiceException(ResultCodeEnum.USER_ALREADY_LOGGED_IN);
+		if (sessions.containsKey(userId)) { // 使用containsKey方法判断
+			log.warn("UserID:{} 已登录，连接建立失败!", userId); // 改为warn级别
 			return;
 		}
 		sessions.put(userId, session);
-		log.info("UserID:{}，WebSocket连接建立",userId);
+		log.info("UserID:{} WebSocket连接建立", userId);
 	}
+
 	public void removeUser(int userId, WebSocketSession session) {
-		//从之前的连接中获取到已经建立连接的Session
 		WebSocketSession existSession = sessions.get(userId);
-		if(existSession != session){
-			log.info("传入session和已建立连接session不匹配");
-			return;
-			//throw new ServiceException(ResultCodeEnum.PARAM_SESSION_NOT_MATCHING);
+		if (existSession != null && existSession.equals(session)) { // 使用equals检查session匹配
+			sessions.remove(userId);
+			log.info("UserID:{} WebSocket连接已移除", userId);
+		} else {
+			log.warn("传入session和已建立连接session不匹配，UserID:{}", userId); // 改为warn级别
 		}
 	}
-	/** 
-	* @description: 根据UserId返回Session
-	* @param: [int]
-	* @return: org.springframework.web.socket.WebSocketSession
-	* @author: IhaveBB
-	* @date: 2024/8/19 
-	**/
+
+	/**
+	 * @description: 根据UserId返回Session
+	 * @param: userId
+	 * @return: WebSocketSession
+	 */
 	public WebSocketSession getSession(int userId) {
 		return sessions.get(userId);
 	}

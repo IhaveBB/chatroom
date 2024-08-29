@@ -114,7 +114,7 @@ public class MessageSessionService {
 		//给message_session_user表插入数据
 		int ret2 = messageSessionMapper.addMessageSessionUser(messageSessionId,userId);
 		int ret3 = messageSessionMapper.addMessageSessionUser(messageSessionId,otherId);
-		if(ret2 <= 0 && ret3 <= 0){
+		if(ret2 <= 0 || ret3 <= 0){
 			log.warn("message_session_user表:会话插入用户失败，影响行数为:{},{}",ret2,ret3);
 			throw new ServiceException(ResultCodeEnum.SYSTEM_ERROR);
 		}

@@ -13,5 +13,5 @@ import org.apache.ibatis.annotations.Param;
 public interface UserMapper {
 	User selectByName(String username);
 	int insertUser(User user);
-	int isUserIdExists(Integer userId);
+	Integer isUserIdExists(Integer userId);
 }

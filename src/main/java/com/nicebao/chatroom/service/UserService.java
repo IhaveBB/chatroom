@@ -84,8 +84,8 @@ public class UserService {
 		if(userId == null || userId <= 0){
 			return false;
 		}
-		int count = userMapper.isUserIdExists(userId);
-		if(count <= 0){
+		Integer count = userMapper.isUserIdExists(userId);
+		if(count == 00 || count == null){
 			return false;
 		}
 		return true;

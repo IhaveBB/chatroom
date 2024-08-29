@@ -25,7 +25,8 @@ public enum ResultCodeEnum implements BaseErrorInfoInterface {
 	USER_ALREADY_LOGGED_IN(2005, "用户已登录"),
 	/*系统错误*/
 	SYSTEM_ERROR(10000, "系统异常，请稍后重试"),
-	REGISTER_ERROR(10001,"注册异常，请稍后重试")
+	REGISTER_ERROR(10001,"注册异常，请稍后重试"),
+	FRIEND_ALREADY_EXISTS(10002,"好友关系已存在")
 	;
 
 	private int code;
