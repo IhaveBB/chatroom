@@ -20,6 +20,8 @@ public interface MessageSessionMapper {
 	List<Integer> getMessageSessionListByUserId(Integer userId);
 	//根据用户获取的SessionId，来获取到这个会话（sessionId）包含了哪些用户，排除最初的自己
 	List<Friend> getMessageSessionFriendsBySessionId(@Param("sessionId")Integer sessionId, @Param("selfUserId") Integer selfUserId);
+
 	int addMessageSession(AcceptMessageSessionId acceptMessageSessionId);
+
 	int addMessageSessionUser(@Param("sessionId")Integer sessionId, @Param("userId")Integer userId);
 }

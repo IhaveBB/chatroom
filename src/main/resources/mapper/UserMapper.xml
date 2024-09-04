@@ -15,4 +15,7 @@
         FROM user
         WHERE userId = #{userId}
     </select>
+    <select id="selectByUserId" resultType="com.nicebao.chatroom.model.User">
+        SELECT * from user where userId = #{userId}
+    </select>
 </mapper>

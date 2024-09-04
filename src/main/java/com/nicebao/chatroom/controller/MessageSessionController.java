@@ -33,13 +33,8 @@ public class MessageSessionController {
 	private UserService userService;
 
 	@GetMapping("/getMessageSessionList")
-	public List<MessageSession> getMessageSessionList(HttpServletRequest request) {
-		log.info("getMessageSessionList获取到请求");
-		HttpSession session = request.getSession(false);
-		log.info("getMessageSessionList获取到请求,sessionId为" + session.toString());
-		User user = userService.getUserFromSession(session);
-		messageSessionService.getMessageSessionListByUserId(user.getUserId());
-
+	public List<MessageSession> getMessageSessionList() {
+		User user = userService.getUserInfo();
 		return messageSessionService.getMessageSessionListByUserId(user.getUserId());
 	}
 	/** 
@@ -50,7 +45,8 @@ public class MessageSessionController {
 	* @date: 2024/8/16 
 	**/
 	@RequestMapping("/addMessageSession")
-	public ResponseResult<Integer> addMessageSession(Integer otherId, @SessionAttribute("user")User user) {
+	public ResponseResult<Integer> addMessageSession(Integer otherId) {
+		User user = userService.getUserInfo();
 		Integer ret = messageSessionService.addMessageSession(otherId,user.getUserId());
 		return ResponseResult.success(ret);
 	}

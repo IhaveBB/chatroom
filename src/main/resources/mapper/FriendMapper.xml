@@ -10,11 +10,16 @@
         FROM friend
         WHERE userId = #{userId} AND friendId = #{friendId}
     </select>
+
+
+
     <select id="getFriendListById" resultType="com.nicebao.chatroom.model.Friend">
         select userId as friendId, username as friendName from user
         where userId in
               (select friendId from friend where userId = #{userId})
     </select>
+
+
     <select id="isExistMessageSession" resultType="integer">
         SELECT sessionId
         FROM message_session_user
@@ -27,8 +32,12 @@
         where userId in
               (select userId from message_session_user where sessionId = #{sessionId})
     </select>
+
+
     <select id="searchFriendsByFriendName" resultType="com.nicebao.chatroom.model.Friend">
         select userId as friendId, username as friendName from user
         where username = #{username}
     </select>
+
+
 </mapper>

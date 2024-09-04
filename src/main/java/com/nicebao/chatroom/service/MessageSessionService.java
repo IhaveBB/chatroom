@@ -1,5 +1,6 @@
 package com.nicebao.chatroom.service;
 
+import com.nicebao.chatroom.dao.FriendMapper;
 import com.nicebao.chatroom.dao.MessageSessionMapper;
 import com.nicebao.chatroom.enums.ResultCodeEnum;
 import com.nicebao.chatroom.exception.ServiceException;
@@ -28,6 +29,8 @@ public class MessageSessionService {
 	private MessageService messageService;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private FriendMapper friendService;
 	/**
 	* LJBTODO: 2024/8/16 0:07 IhaveBB
 	 * 先根据UserId找出SessionId -> 根据用户ID，获取出用户的MessageSessionId
@@ -102,6 +105,7 @@ public class MessageSessionService {
 			log.warn("ID缺失：otherId={},userId={}",otherId,userId);
 			throw new ServiceException(ResultCodeEnum.PARAM_IS_ERROR);
 		}
+
 		//先插入数据到message_session表,创建出会话后获取到会话的Id
 		//如果我们要获取数据库的自增值，需要创建一个对象来接受
 		AcceptMessageSessionId acceptMessageSessionId = new AcceptMessageSessionId();

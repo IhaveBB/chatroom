@@ -14,4 +14,5 @@ public interface UserMapper {
 	User selectByName(String username);
 	int insertUser(User user);
 	Integer isUserIdExists(Integer userId);
+	User selectByUserId(Integer userId);
 }

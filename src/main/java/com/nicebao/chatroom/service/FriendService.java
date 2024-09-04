@@ -25,16 +25,17 @@ public class FriendService {
 	@Autowired
 	private UserService userService;
 
-	public List<Friend> getFriendList(HttpSession session) {
-		if(session == null){
-			log.debug("session is null");
-			throw new ServiceException(ResultCodeEnum.USER_NOTLOGGED_IN);
-		}
-		User user = (User) session.getAttribute("user");
-		if (user == null){
-			log.debug("user is null");
-			throw new ServiceException(ResultCodeEnum.USER_NOTLOGGED_IN);
-		}
+	public List<Friend> getFriendList() {
+//		if(session == null){
+//			log.debug("session is null");
+//			throw new ServiceException(ResultCodeEnum.USER_NOTLOGGED_IN);
+//		}
+//		User user = (User) session.getAttribute("user");
+//		if (user == null){
+//			log.debug("user is null");
+//			throw new ServiceException(ResultCodeEnum.USER_NOTLOGGED_IN);
+//		}
+		User user = userService.getUserInfo();
 		List<Friend> friends = friendMapper.getFriendListById(user.getUserId());
 		log.info(friends.toString());
 		return friends;
@@ -63,6 +64,7 @@ public class FriendService {
 		}
 		//在添加好友前，先检查一下表钟是否存在这一条记录
 		int isExistFriendRelationship = friendMapper.isFriendExists(userId,otherId);
+
 		if(isExistFriendRelationship > 0){
 			log.info("friend is exist，不添加记录");
 			throw new ServiceException(ResultCodeEnum.FRIEND_ALREADY_EXISTS);

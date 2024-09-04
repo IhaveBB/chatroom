@@ -6,6 +6,7 @@ import com.nicebao.chatroom.model.User;
 import com.nicebao.chatroom.service.FriendService;
 import com.nicebao.chatroom.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,17 +33,20 @@ public class FriendController {
 	@Autowired
 	private UserService userService;
 	@GetMapping("/getFriendList")
-	public ResponseResult<List<Friend>> getFriendList(HttpServletRequest req){
-		HttpSession session = req.getSession(false);
-		List<Friend> friends = friendService.getFriendList(session);
+	public ResponseResult<List<Friend>> getFriendList(){
+//		HttpSession session = req.getSession(false);
+//		List<Friend> friends = friendService.getFriendList(session);
+		List<Friend> friends = friendService.getFriendList();
 		log.info(friends.toString());
 		return ResponseResult.success(friends);
 	}
 	@GetMapping("/isExistMessageSession")
-	public ResponseResult<Integer> isExistMessageSession(HttpServletRequest req,Integer friendId){
-		HttpSession session = req.getSession(false);
-		User user = (User) session.getAttribute("user");
+	public ResponseResult<Integer> isExistMessageSession(Integer friendId){
+//		HttpSession session = req.getSession(false);
+//		User user = (User) session.getAttribute("user");
+		User user = userService.getUserInfo();
 		Integer ret = friendService.isExistMessageSession(user.getUserId(),friendId);
+		log.info(ret.toString());
 		return ResponseResult.success(ret);
 	}
 	/** 
@@ -65,12 +69,8 @@ public class FriendController {
 	* @date: 2024/8/29 
 	**/
 	@GetMapping("/addFriend")
-	public ResponseResult addFriend(Integer otherId, HttpServletRequest request){
-		log.info("getMessageSessionList获取到请求");
-		HttpSession session = request.getSession(false);
-		log.info("getMessageSessionList获取到请求,sessionId为" + session.toString());
-		User user = userService.getUserFromSession(session);
-
+	public ResponseResult addFriend(Integer otherId){
+		User user = userService.getUserInfo();
 		friendService.addFriendByFriendId(otherId,user);
 		return ResponseResult.success("");
 	}

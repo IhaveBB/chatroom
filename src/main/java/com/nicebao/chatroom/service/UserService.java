@@ -1,21 +1,27 @@
 package com.nicebao.chatroom.service;
 
-import com.nicebao.chatroom.common.ResponseResult;
-import com.nicebao.chatroom.dao.FriendMapper;
 import com.nicebao.chatroom.dao.UserMapper;
 import com.nicebao.chatroom.dto.LoginRequest;
 import com.nicebao.chatroom.dto.RegisterRequest;
 import com.nicebao.chatroom.enums.ResultCodeEnum;
 import com.nicebao.chatroom.exception.ServiceException;
-import com.nicebao.chatroom.model.Friend;
+import com.nicebao.chatroom.model.CustomUserDetails;
 import com.nicebao.chatroom.model.User;
+import com.nicebao.chatroom.utils.JWTUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @name: UserService
@@ -29,17 +35,26 @@ public class UserService {
 	@Autowired
 	UserMapper userMapper;
 
-	public User login(LoginRequest request, HttpServletRequest req){
+	public String login(LoginRequest request, HttpServletResponse response){
 		User user = userMapper.selectByName(request.getUsername());
 		if(user == null || !user.getPassword().equals(request.getPassword())) {
 			log.debug("username:{}, password:{}", request.getUsername(), request.getPassword());
 			log.info("用户{}登录失败，用户名或者密码错误", request.getUsername());
 			throw new ServiceException(ResultCodeEnum.USER_LOGIN_ERROR);
 		}
-		HttpSession session = req.getSession();
-		session.setAttribute("user", user);
-		user.setPassword("");
-		return user;
+//		HttpSession session = req.getSession();
+//		session.setAttribute("user", user);
+
+		Map<String,Object> map = new HashMap<>();
+		map.put("userId",user.getUserId());
+		map.put("username",request.getUsername());
+		String token = JWTUtils.genJwt(map);
+
+		Cookie cookie = new Cookie("token", token);
+		cookie.setHttpOnly(true);
+		cookie.setPath("/");
+		response.addCookie(cookie);
+		return "登录成功";
 	}
 
 	public Integer register(RegisterRequest request) {
@@ -59,17 +74,12 @@ public class UserService {
 		throw new ServiceException(ResultCodeEnum.REGISTER_ERROR);
 	}
 
-	public User getUserFromSession(HttpSession session) {
-		if(session == null){
-			log.debug("session is null");
-			throw new ServiceException(ResultCodeEnum.USER_NOTLOGGED_IN);
-		}
-		User user = (User) session.getAttribute("user");
-		if (user == null){
-			log.debug("user is null");
-			throw new ServiceException(ResultCodeEnum.USER_NOTLOGGED_IN);
-		}
-		user.setPassword("");
+	public User getUserInfo() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+		User user = new User();
+		user.setUserId(userDetails.getUserId());
+		user.setUsername(userDetails.getUsername());
 		return user;
 	}
 
