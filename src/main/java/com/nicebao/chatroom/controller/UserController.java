@@ -40,7 +40,7 @@ public class UserController {
 	* LJBTODO: 2024/8/14 17:58 IhaveBB JWT校验 密码加密等均未完成
 	*/
 	@PostMapping("/login")
-	public ResponseResult<String> login(@Valid @RequestBody LoginRequest request, HttpServletResponse response)  {
+	public ResponseResult<User> login(@Valid @RequestBody LoginRequest request, HttpServletResponse response)  {
 		return ResponseResult.success(userService.login(request,response));
 	}
 	@PostMapping("/register")

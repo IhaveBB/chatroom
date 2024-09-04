@@ -15,6 +15,8 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.Cookie;
@@ -34,10 +36,17 @@ import java.util.Map;
 public class UserService {
 	@Autowired
 	UserMapper userMapper;
+	private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-	public String login(LoginRequest request, HttpServletResponse response){
+	public User login(LoginRequest request, HttpServletResponse response){
 		User user = userMapper.selectByName(request.getUsername());
-		if(user == null || !user.getPassword().equals(request.getPassword())) {
+		String storePassword = user.getPassword();
+		String inputPassword = request.getPassword();
+		//log.info("storePassword"+storePassword);
+		//log.info("inputPassword"+inputPassword);
+		boolean matches = passwordEncoder.matches(inputPassword, storePassword);
+		//log.info("matches:"+matches);
+		if(!matches) {
 			log.debug("username:{}, password:{}", request.getUsername(), request.getPassword());
 			log.info("用户{}登录失败，用户名或者密码错误", request.getUsername());
 			throw new ServiceException(ResultCodeEnum.USER_LOGIN_ERROR);
@@ -54,13 +63,17 @@ public class UserService {
 		cookie.setHttpOnly(true);
 		cookie.setPath("/");
 		response.addCookie(cookie);
-		return "登录成功";
+
+		user.setPassword("");
+
+		return user;
 	}
 
 	public Integer register(RegisterRequest request) {
 		User user = new User();
 		user.setUsername(request.getUsername());
-		user.setPassword(request.getPassword());
+		//密码加密存储
+		user.setPassword(passwordEncoder.encode(request.getPassword()));
 		user.setEmail(request.getEmail());
 		user.setGender(request.getGender());
 		user.setIsActive(true);

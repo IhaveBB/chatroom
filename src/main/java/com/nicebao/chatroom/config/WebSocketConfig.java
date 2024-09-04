@@ -1,5 +1,6 @@
 package com.nicebao.chatroom.config;
 
+import com.nicebao.chatroom.interceptor.JwtHandshakeInterceptor;
 import com.nicebao.chatroom.websocket.TestWebSocketApi;
 import com.nicebao.chatroom.websocket.WebSocketApi;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +22,14 @@ import org.springframework.web.socket.server.support.HttpSessionHandshakeInterce
 public class WebSocketConfig implements WebSocketConfigurer {
 	@Autowired
 	private WebSocketApi webSocketApi;
+	@Autowired
+	private JwtHandshakeInterceptor jwtHandshakeInterceptor;
+
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
 		registry.addHandler(webSocketApi,"/chat")
-				.addInterceptors(new HttpSessionHandshakeInterceptor())
+//				.addInterceptors(new HttpSessionHandshakeInterceptor())
+				.addInterceptors(jwtHandshakeInterceptor)
 				.setAllowedOrigins("*");
 	}
 }

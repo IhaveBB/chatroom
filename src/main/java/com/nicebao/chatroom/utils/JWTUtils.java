@@ -26,7 +26,10 @@ public class JWTUtils {
 	//密钥
 	public static String secret = "dVnsmy+SIX6pNptQdeclDSJ26EMSPEIhvZYKBTTug4k=";
 	//过期时间(单位: 毫秒)--->30分钟
-	public static long expiration = 30*60*1000;
+	/**
+	* LJBTODO: 2024/9/4 17:08 IhaveBB 后边使用更安全的JWT刷新方法
+	*/
+	public static long expiration = 24*60*60*1000;
 	//生成安全密钥：编码方式未BASE64
 	private static SecretKey secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
 	/**
@@ -53,13 +56,8 @@ public class JWTUtils {
 		//创建解析器, 设置签名密钥
 		JwtParserBuilder jwtParserBuilder = Jwts.parserBuilder().setSigningKey(secretKey);
 		Claims claims = null;
-		try {
 		//解析token
 			claims = jwtParserBuilder.build().parseClaimsJws(jwt).getBody();
-		}catch (Exception e){
-		//签名验证失败
-			log.error("解析令牌错误,jwt:{}",jwt);
-		}
 		return claims;
 	}
 	/**
