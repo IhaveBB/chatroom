@@ -108,9 +108,16 @@ public class UserService {
 			return false;
 		}
 		Integer count = userMapper.isUserIdExists(userId);
-		if(count == 00 || count == null){
+		if(count == 0 || count == null){
 			return false;
 		}
 		return true;
+	}
+
+	public User selectByUserId(Integer userId) {
+		if(!isUserIdExist(userId)){
+			throw new ServiceException(ResultCodeEnum.PARAM_IS_ERROR);
+		}
+		return userMapper.selectByUserId(userId);
 	}
 }

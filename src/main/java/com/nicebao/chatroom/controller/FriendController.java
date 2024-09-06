@@ -2,17 +2,16 @@ package com.nicebao.chatroom.controller;
 
 import com.nicebao.chatroom.common.ResponseResult;
 import com.nicebao.chatroom.model.Friend;
+import com.nicebao.chatroom.model.FriendRequest;
 import com.nicebao.chatroom.model.User;
 import com.nicebao.chatroom.service.FriendService;
 import com.nicebao.chatroom.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -68,11 +67,32 @@ public class FriendController {
 	* @author: IhaveBB
 	* @date: 2024/8/29 
 	**/
-	@GetMapping("/addFriend")
-	public ResponseResult addFriend(Integer otherId){
-		User user = userService.getUserInfo();
-		friendService.addFriendByFriendId(otherId,user);
-		return ResponseResult.success("");
+//	@GetMapping("/addFriend")
+//	public ResponseResult addFriend(Integer otherId){
+//		User user = userService.getUserInfo();
+//		friendService.addFriendByFriendId(otherId,user);
+//		return ResponseResult.success("");
+//	}
+
+	/**
+	* @description: 添加好友，填入对方ID和验证信息。发送者信息从登录用户里读取
+	* @param: [java.lang.Integer, java.lang.String]
+	* @return: com.nicebao.chatroom.common.ResponseResult<java.lang.Integer>
+	* @author: IhaveBB
+	* @date: 2024/9/5
+	**/
+	@PostMapping("/send")
+	public ResponseResult<Integer> sendFriendRequest(
+			@RequestParam Integer receiverId,
+			@RequestParam String message) {
+		Integer ret = friendService.sendFriendRequest(receiverId, message);
+		return ResponseResult.success(ret);
 	}
+
+	@PostMapping("/accept")
+	public ResponseResult<String> acceptFriendRequest(@RequestParam Integer requestId) {
+		return ResponseResult.success(friendService.acceptFriendRequest(requestId));
+	}
+
 
 }

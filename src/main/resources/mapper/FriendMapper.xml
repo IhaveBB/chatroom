@@ -5,6 +5,18 @@
     <insert id="addFriendByFriendId">
         insert into friend values(#{userId}, #{friendId})
     </insert>
+    <insert id="replyToFriendRequest">
+        INSERT INTO friend_requests
+    </insert>
+    <insert id="addFriendRequest">
+        INSERT INTO friend_request (sender_id, receiver_id, status, message)
+        VALUES (#{senderId}, #{receiverId}, #{status}, #{message})
+    </insert>
+    <update id="updateFriendRequestStatus">
+        update friend_request
+        SET status = #{status}
+        WHERE id = #{id}
+    </update>
     <select id="isFriendExists" resultType="integer">
         SELECT COUNT(*)
         FROM friend
@@ -37,6 +49,14 @@
     <select id="searchFriendsByFriendName" resultType="com.nicebao.chatroom.model.Friend">
         select userId as friendId, username as friendName from user
         where username = #{username}
+    </select>
+    <select id="getFriendRequestById" resultType="com.nicebao.chatroom.model.FriendRequest">
+        select * from friend_request where id = #{friendRequestId}
+    </select>
+    <select id="getFriendRequestList" resultType="com.nicebao.chatroom.model.FriendRequest">
+        select * from friend_request
+        where sender_id = #{userId} OR receiver_id = #{userId}
+        ORDER BY updated_at ASC;
     </select>
 
 

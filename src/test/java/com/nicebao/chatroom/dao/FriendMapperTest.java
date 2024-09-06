@@ -1,5 +1,7 @@
 package com.nicebao.chatroom.dao;
 
+import com.nicebao.chatroom.model.FriendRequest;
+import com.nicebao.chatroom.model.User;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,5 +42,34 @@ class FriendMapperTest {
 
 	@Test
 	void isFriendExists() {
+	}
+
+	@Test
+	void getFriendRequestById() {
+		FriendRequest friendRequest = friendMapper.getFriendRequestById(2);
+		System.out.println(friendRequest.toString());
+	}
+
+	@Test
+	void addFriendRequest() {
+		FriendRequest friendRequest = new FriendRequest();
+		friendRequest.setStatus("PENDING");
+		friendRequest.setMessage("test");
+		friendRequest.setSenderId(1);
+		friendRequest.setReceiverId(2);
+
+		friendMapper.addFriendRequest(friendRequest);
+
+	}
+
+	@Test
+	void updateFriendRequestStatus() {
+		FriendRequest friendRequest = new FriendRequest();
+		friendRequest.setStatus("ACCEPTED");
+		friendRequest.setMessage("test");
+		friendRequest.setSenderId(1);
+		friendRequest.setReceiverId(2);
+		int ret = friendMapper.updateFriendRequestStatus(friendRequest);
+		System.out.println(ret);
 	}
 }

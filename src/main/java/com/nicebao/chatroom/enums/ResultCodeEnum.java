@@ -26,7 +26,9 @@ public enum ResultCodeEnum implements BaseErrorInfoInterface {
 	/*系统错误*/
 	SYSTEM_ERROR(10000, "系统异常，请稍后重试"),
 	REGISTER_ERROR(10001,"注册异常，请稍后重试"),
-	FRIEND_ALREADY_EXISTS(10002,"好友关系已存在")
+	FRIEND_ALREADY_EXISTS(10002,"好友关系已存在"),
+	USER_ILLEGAL_ACCESS(10003,"用户权限不足"),
+	CHANGE_FRIEND_REQUEST_STATUS_ERROR(10004,"修改好友请求状态失败"),
 	;
 
 	private int code;
