@@ -6,6 +6,7 @@ import com.nicebao.chatroom.exception.ServiceException;
 import com.nicebao.chatroom.model.Friend;
 import com.nicebao.chatroom.model.FriendRequest;
 import com.nicebao.chatroom.model.User;
+import com.nicebao.chatroom.model.VerificationMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -120,7 +121,12 @@ public class FriendService {
 		if(loginUserId != receiverId){
 			throw new ServiceException(ResultCodeEnum.USER_ILLEGAL_ACCESS);
 		}
-		//鉴权没问题后，添加双向好友，A有B B有A
+		//在更改状态前先检测一下，当前是否为PADDING，如果是可以修改
+		//如果不是则证明已经处理过这个消息了，拒绝二次修改
+		if(!"PENDING".equals(friendMapper.getFriendRequestStats(receiverId).toUpperCase())){
+			throw new ServiceException(ResultCodeEnum.USER_FRIEND_REQUEST_NOT_PENDING);
+		}
+		//没问题后，添加双向好友，A有B B有A
 		//在添加好友前，先检查一下表钟是否存在这一条记录
 		int isExistFriendRelationship = friendMapper.isFriendExists(senderId,receiverId);
 
@@ -159,9 +165,13 @@ public class FriendService {
 
 		FriendRequest friendRequest = friendMapper.getFriendRequestById(requestId);
 		Integer receiverId = friendRequest.getReceiverId();
-		Integer senderId =	friendRequest.getSenderId();
 		if(loginUserId != receiverId){
 			throw new ServiceException(ResultCodeEnum.USER_ILLEGAL_ACCESS);
+		}
+		//在更改状态前先检测一下，当前是否为PADDING，如果是可以修改
+		//如果不是则证明已经处理过这个消息了，拒绝二次修改
+		if(!"PENDING".equals(friendMapper.getFriendRequestStats(receiverId).toUpperCase())){
+			throw new ServiceException(ResultCodeEnum.USER_FRIEND_REQUEST_NOT_PENDING);
 		}
 		//校验没问题，直接修改状态为拒绝，不修改好友表信息
 		friendRequest.setStatus("REJECTED");
@@ -191,7 +201,38 @@ public class FriendService {
 		User user = userService.getUserInfo();
 		return friendMapper.getFriendRequestList(user.getUserId());
 	}
-	
+	/**
+	 * @description: 根据请求ID，可以获取到双方信息，和这个验证消息的状态，只有处于待审核时候才能发送消息。
+	 * 此外，需要根据登录用户的ID，和会话信息里的双方ID进行匹配，查看是否是这个请求中的人 ！= 则为非法访问
+	 * 信息发送者就是登录用户
+	 * @param: [java.lang.Long, java.lang.Long, java.lang.String]
+	 * @return: com.nicebao.chatroom.model.VerificationMessage
+	 * @author: IhaveBB
+	 * @date: 2024/9/12
+	 **/
+	public Integer sendVerificationMessage(int requestId, String message) {
+		//鉴权，保证登录用户是好友申请的发送者或者是接受者
+		Integer loginUserId = userService.getUserInfo().getUserId();
+		FriendRequest friendRequest = friendMapper.getFriendRequestById(requestId);
+		Integer RequestSenderId = friendRequest.getReceiverId();
+		Integer ResponseSenderId = friendRequest.getSenderId();
+		if(loginUserId != RequestSenderId && loginUserId != ResponseSenderId){
+			throw new ServiceException(ResultCodeEnum.USER_ILLEGAL_ACCESS);
+		}
+		log.info(friendRequest.getStatus().toUpperCase());
+		//验证会话的状态
+		if(!"PENDING".equals(friendRequest.getStatus().toUpperCase())){
+			throw new ServiceException(ResultCodeEnum.USER_FRIEND_REQUEST_CLOSED);
+		}
 
+		VerificationMessage verificationMessage = new VerificationMessage();
+		verificationMessage.setMessage(message);
+		verificationMessage.setRequestId(requestId);
+		verificationMessage.setSenderId(loginUserId);
+
+
+		return friendMapper.saveVerificationMessage(verificationMessage);
+
+	}
 
 }

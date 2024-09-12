@@ -2,6 +2,7 @@ package com.nicebao.chatroom.dao;
 
 import com.nicebao.chatroom.model.FriendRequest;
 import com.nicebao.chatroom.model.User;
+import com.nicebao.chatroom.model.VerificationMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +71,21 @@ class FriendMapperTest {
 		friendRequest.setSenderId(1);
 		friendRequest.setReceiverId(2);
 		int ret = friendMapper.updateFriendRequestStatus(friendRequest);
+		System.out.println(ret);
+	}
+
+	@Test
+	void saveVerificationMessage() {
+		VerificationMessage verificationMessage = new VerificationMessage();
+		verificationMessage.setRequestId(222);
+		verificationMessage.setMessage("test");
+		verificationMessage.setSenderId(111);
+		friendMapper.saveVerificationMessage(verificationMessage);
+	}
+
+	@Test
+	void getFriendRequestStats() {
+		String ret = friendMapper.getFriendRequestStats(4);
 		System.out.println(ret);
 	}
 }

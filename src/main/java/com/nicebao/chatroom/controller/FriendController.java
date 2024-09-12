@@ -94,5 +94,18 @@ public class FriendController {
 		return ResponseResult.success(friendService.acceptFriendRequest(requestId));
 	}
 
+	@PostMapping("/reject")
+	public ResponseResult<String> rejectFriendRequest(@RequestParam Integer requestId) {
+		return ResponseResult.success(friendService.rejectFriendRequest(requestId));
+	}
+	@GetMapping("/getFriendRequestList")
+	public ResponseResult<List<FriendRequest>> getFriendRequestList(){
+		List<FriendRequest> ret = friendService.getFriendRequestList();
+		return ResponseResult.success(ret);
+	}
+	@PostMapping("/sendVerificationMessage")
+	public ResponseResult<Integer> sendVerificationMessage(int requestId,String message){
+		return ResponseResult.success(friendService.sendVerificationMessage(requestId,message));
+	}
 
 }

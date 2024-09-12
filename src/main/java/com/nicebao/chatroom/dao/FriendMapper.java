@@ -2,6 +2,7 @@ package com.nicebao.chatroom.dao;
 
 import com.nicebao.chatroom.model.Friend;
 import com.nicebao.chatroom.model.FriendRequest;
+import com.nicebao.chatroom.model.VerificationMessage;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -28,4 +29,8 @@ public interface FriendMapper {
 	Integer updateFriendRequestStatus(FriendRequest friendRequest);
 
 	List<FriendRequest> getFriendRequestList(@Param("userId") int userId);
+
+	Integer saveVerificationMessage(VerificationMessage verificationMessage);
+
+	String getFriendRequestStats(@Param("friendRequestId")int friendRequestId);
 }

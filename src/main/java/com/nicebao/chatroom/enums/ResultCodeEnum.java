@@ -23,6 +23,8 @@ public enum ResultCodeEnum implements BaseErrorInfoInterface {
 	USER_REGISTER_EXISTS(2003,"用户名已存在"),
 	USER_LACK_ERROR(2004,"用户不存在"),
 	USER_ALREADY_LOGGED_IN(2005, "用户已登录"),
+	USER_FRIEND_REQUEST_CLOSED(2006,"好友请求已关闭"),
+	USER_FRIEND_REQUEST_NOT_PENDING(2007,"好友申请非待处理状态"),
 	/*系统错误*/
 	SYSTEM_ERROR(10000, "系统异常，请稍后重试"),
 	REGISTER_ERROR(10001,"注册异常，请稍后重试"),

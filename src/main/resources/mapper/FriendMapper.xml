@@ -12,6 +12,9 @@
         INSERT INTO friend_request (sender_id, receiver_id, status, message)
         VALUES (#{senderId}, #{receiverId}, #{status}, #{message})
     </insert>
+    <insert id="saveVerificationMessage">
+        insert into verification_message(request_id,sender_id,message)values(#{requestId},#{senderId},#{message})
+    </insert>
     <update id="updateFriendRequestStatus">
         update friend_request
         SET status = #{status}
@@ -57,6 +60,10 @@
         select * from friend_request
         where sender_id = #{userId} OR receiver_id = #{userId}
         ORDER BY updated_at ASC;
+    </select>
+    <select id="getFriendRequestStats" resultType="java.lang.String">
+        select `status` from friend_request
+        where id = #{friendRequestId}
     </select>
 
 

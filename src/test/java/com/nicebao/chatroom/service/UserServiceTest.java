@@ -16,7 +16,7 @@ class UserServiceTest {
 	@Test
 	void register() {
 		PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-		String password = passwordEncoder.encode("($Avd(OP!$u8msxxp1)FT&v7q!");
+		String password = passwordEncoder.encode("Qwe123456");
 		System.out.println(password);
 	}
 }
