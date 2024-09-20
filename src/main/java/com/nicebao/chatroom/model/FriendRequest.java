@@ -12,9 +12,11 @@ import java.sql.Date;
  **/
 @Data
 public class FriendRequest {
-	private int id;
+	private Integer id;
 	private Integer senderId;
+	private String senderName;
 	private Integer receiverId;
+	private String receiverName;
 	private String status;
 	private String message;
 }

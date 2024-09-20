@@ -3,6 +3,7 @@ package com.nicebao.chatroom.controller;
 import com.nicebao.chatroom.common.ResponseResult;
 import com.nicebao.chatroom.model.Friend;
 import com.nicebao.chatroom.model.FriendRequest;
+import com.nicebao.chatroom.model.Test;
 import com.nicebao.chatroom.model.User;
 import com.nicebao.chatroom.service.FriendService;
 import com.nicebao.chatroom.service.UserService;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
@@ -81,7 +83,7 @@ public class FriendController {
 	* @author: IhaveBB
 	* @date: 2024/9/5
 	**/
-	@PostMapping("/send")
+	@GetMapping("/send")
 	public ResponseResult<Integer> sendFriendRequest(
 			@RequestParam Integer receiverId,
 			@RequestParam String message) {
@@ -89,12 +91,12 @@ public class FriendController {
 		return ResponseResult.success(ret);
 	}
 
-	@PostMapping("/accept")
+	@GetMapping("/accept")
 	public ResponseResult<String> acceptFriendRequest(@RequestParam Integer requestId) {
 		return ResponseResult.success(friendService.acceptFriendRequest(requestId));
 	}
 
-	@PostMapping("/reject")
+	@GetMapping("/reject")
 	public ResponseResult<String> rejectFriendRequest(@RequestParam Integer requestId) {
 		return ResponseResult.success(friendService.rejectFriendRequest(requestId));
 	}
@@ -103,9 +105,12 @@ public class FriendController {
 		List<FriendRequest> ret = friendService.getFriendRequestList();
 		return ResponseResult.success(ret);
 	}
-	@PostMapping("/sendVerificationMessage")
-	public ResponseResult<Integer> sendVerificationMessage(int requestId,String message){
+	@GetMapping("/sendVerificationMessage")
+	public ResponseResult<Integer> sendVerificationMessage(@RequestParam int requestId,@RequestParam String message){
 		return ResponseResult.success(friendService.sendVerificationMessage(requestId,message));
 	}
-
+	@GetMapping("/getFriendInfoById")
+	public ResponseResult<User> getFriendInfoById(@RequestParam Integer friendId) {
+		return ResponseResult.success(friendService.getFriendInfoById(friendId));
+	}
 }

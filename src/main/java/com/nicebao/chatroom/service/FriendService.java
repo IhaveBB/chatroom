@@ -111,7 +111,7 @@ public class FriendService {
 	* @date: 2024/9/6 
 	**/
 	public String acceptFriendRequest(Integer requestId) {
-		//根据先前的申请好友那条回话ID，来获取到双方的信息
+		
 		//这里需要鉴权，先获取一下登录用户信息，然后看登录用户是否是被申请好友的那一方，只有被申请好友的那一方才有权限同意
 		Integer loginUserId = userService.getUserInfo().getUserId();
 
@@ -121,9 +121,12 @@ public class FriendService {
 		if(loginUserId != receiverId){
 			throw new ServiceException(ResultCodeEnum.USER_ILLEGAL_ACCESS);
 		}
+		String ret = friendMapper.getFriendRequestStats(3);
+		log.info("status{},receiverID:{}",friendRequest.getStatus(),receiverId);
+		log.info(friendMapper.getFriendRequestStats(requestId)) ;
 		//在更改状态前先检测一下，当前是否为PADDING，如果是可以修改
 		//如果不是则证明已经处理过这个消息了，拒绝二次修改
-		if(!"PENDING".equals(friendMapper.getFriendRequestStats(receiverId).toUpperCase())){
+		if(!"PENDING".equalsIgnoreCase(friendRequest.getStatus())){
 			throw new ServiceException(ResultCodeEnum.USER_FRIEND_REQUEST_NOT_PENDING);
 		}
 		//没问题后，添加双向好友，A有B B有A
@@ -233,6 +236,31 @@ public class FriendService {
 
 		return friendMapper.saveVerificationMessage(verificationMessage);
 
+	}
+	/**
+	 * 判断用户之间的朋友关系是否成立
+	 *
+	 * @param userId 用户ID，用于判断朋友关系的用户
+	 * @param friendId 友ID，用于判断朋友关系的另一方
+	 * @return 如果朋友关系成立返回true，否则返回false
+	 */
+	public boolean isFriend(int userId, int friendId){
+		return friendMapper.isFriendExists(userId, friendId) > 0;
+	}
+
+	public User getFriendInfoById(Integer friendId) {
+		User user = userService.getUserInfo();
+		log.info("friendId:{},userId:{}",friendId,user.getUserId());
+		//首先检测是不是好友，只有好友才能查看详细资料
+		if(!isFriend(user.getUserId(), friendId)){
+			throw new ServiceException(ResultCodeEnum.USER_ILLEGAL_ACCESS);
+		}
+		/**
+		 * LJBTODO: 2024/9/19 9:19 IhaveBB 后期，用户可以设置对外展示哪些资料
+		 */
+		User friendInfo = userService.selectByUserId(friendId);
+		friendInfo.setPassword("");
+		return friendInfo;
 	}
 
 }

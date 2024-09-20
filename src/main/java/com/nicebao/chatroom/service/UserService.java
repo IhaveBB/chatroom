@@ -90,6 +90,9 @@ public class UserService {
 	public User getUserInfo() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+		if(userDetails == null){
+			throw new ServiceException(ResultCodeEnum.USER_NOTLOGGED_IN);
+		}
 		User user = new User();
 		user.setUserId(userDetails.getUserId());
 		user.setUsername(userDetails.getUsername());
@@ -120,4 +123,5 @@ public class UserService {
 		}
 		return userMapper.selectByUserId(userId);
 	}
+
 }

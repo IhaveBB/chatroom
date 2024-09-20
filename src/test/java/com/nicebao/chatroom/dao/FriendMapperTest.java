@@ -88,4 +88,10 @@ class FriendMapperTest {
 		String ret = friendMapper.getFriendRequestStats(4);
 		System.out.println(ret);
 	}
+
+	@Test
+	void testGetFriendRequestStats() {
+		String ret = friendMapper.getFriendRequestStats(3);
+		System.out.println(ret);
+	}
 }
