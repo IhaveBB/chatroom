@@ -93,6 +93,14 @@ public class FriendService {
 		Optional<User> sender = Optional.ofNullable(userService.getUserInfo());
 		Optional<User> receiver = Optional.ofNullable(userService.selectByUserId(receiverId));
 
+		//在添加好友前，先检查一下表钟是否存在这一条记录
+		int isExistFriendRelationship = friendMapper.isFriendExists(sender.get().getUserId(),receiver.get().getUserId());
+
+		if(isExistFriendRelationship > 0){
+			log.info("friend is exist，不能申请好友");
+			throw new ServiceException(ResultCodeEnum.FRIEND_ALREADY_EXISTS);
+		}
+
 		if (sender.isPresent() && receiver.isPresent()) {
 			FriendRequest friendRequest = new FriendRequest();
 			friendRequest.setSenderId(sender.get().getUserId());
@@ -173,7 +181,7 @@ public class FriendService {
 		}
 		//在更改状态前先检测一下，当前是否为PADDING，如果是可以修改
 		//如果不是则证明已经处理过这个消息了，拒绝二次修改
-		if(!"PENDING".equals(friendMapper.getFriendRequestStats(receiverId).toUpperCase())){
+		if(!"PENDING".equals(friendRequest.getStatus())){
 			throw new ServiceException(ResultCodeEnum.USER_FRIEND_REQUEST_NOT_PENDING);
 		}
 		//校验没问题，直接修改状态为拒绝，不修改好友表信息

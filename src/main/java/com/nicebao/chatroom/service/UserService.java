@@ -87,7 +87,8 @@ public class UserService {
 		throw new ServiceException(ResultCodeEnum.REGISTER_ERROR);
 	}
 
-	public User getUserInfo() {
+	public User getUserInfo
+			() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 		if(userDetails == null){

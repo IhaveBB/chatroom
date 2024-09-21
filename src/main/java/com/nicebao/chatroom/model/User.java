@@ -22,4 +22,8 @@ public class User {
 	private Boolean isActive;
 	private String avatarUrl;
 	private Integer roleId;
+	private String personalizedSignature;
+	private Integer onlineStatus;
+	private Integer friendCount;
+	private String region;
 }

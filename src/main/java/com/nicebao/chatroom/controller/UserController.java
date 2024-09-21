@@ -53,6 +53,9 @@ public class UserController {
 		User user = userService.getUserInfo();
 		return ResponseResult.success(user);
 	}
+	/**
+	* LJBTODO: 2024/9/20 11:52 IhaveBB 个人信息修改页面待完成
+	*/
 
 
 }
