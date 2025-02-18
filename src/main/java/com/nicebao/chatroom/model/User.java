@@ -26,4 +26,7 @@ public class User {
 	private Integer onlineStatus;
 	private Integer friendCount;
 	private String region;
+
+	private Boolean isEmailVisible;
+	private Boolean isPhoneVisible;
 }

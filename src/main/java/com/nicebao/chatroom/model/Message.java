@@ -11,7 +11,7 @@ import lombok.Data;
 public class Message {
 	private Integer messageId;
 	private Integer fromId;
-	private String fromName;
+//	private String fromName;
 	private Integer sessionId;
 	private String content;
 }

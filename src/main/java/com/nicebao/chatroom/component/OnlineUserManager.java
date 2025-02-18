@@ -14,11 +14,11 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 @Component
 public class OnlineUserManager {
-	private final ConcurrentHashMap<Integer, WebSocketSession> sessions = new ConcurrentHashMap<>(); // 使用泛型钻石操作符
+	private final ConcurrentHashMap<Integer, WebSocketSession> sessions = new ConcurrentHashMap<>();
 
 	public void addUser(int userId, WebSocketSession session) {
-		if (sessions.containsKey(userId)) { // 使用containsKey方法判断
-			log.warn("UserID:{} 已登录，连接建立失败!", userId); // 改为warn级别
+		if (sessions.containsKey(userId)) {
+			log.warn("UserID:{} 已登录，连接建立失败!", userId);
 			return;
 		}
 		sessions.put(userId, session);
@@ -27,11 +27,11 @@ public class OnlineUserManager {
 
 	public void removeUser(int userId, WebSocketSession session) {
 		WebSocketSession existSession = sessions.get(userId);
-		if (existSession != null && existSession.equals(session)) { // 使用equals检查session匹配
+		if (existSession != null && existSession.equals(session)) {
 			sessions.remove(userId);
 			log.info("UserID:{} WebSocket连接已移除", userId);
 		} else {
-			log.warn("传入session和已建立连接session不匹配，UserID:{}", userId); // 改为warn级别
+			log.warn("传入session和已建立连接session不匹配，UserID:{}", userId);
 		}
 	}
 

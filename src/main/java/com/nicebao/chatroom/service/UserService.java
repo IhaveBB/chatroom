@@ -7,6 +7,7 @@ import com.nicebao.chatroom.enums.ResultCodeEnum;
 import com.nicebao.chatroom.exception.ServiceException;
 import com.nicebao.chatroom.model.CustomUserDetails;
 import com.nicebao.chatroom.model.User;
+import com.nicebao.chatroom.model.UserDTO;
 import com.nicebao.chatroom.utils.JWTUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,7 +87,7 @@ public class UserService {
 		}
 		throw new ServiceException(ResultCodeEnum.REGISTER_ERROR);
 	}
-
+	//这个是获取登录用户的用户ID，而不是获取用户的详细信息
 	public User getUserInfo
 			() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -117,12 +118,29 @@ public class UserService {
 		}
 		return true;
 	}
-
+	//根据Id查找用户信息
 	public User selectByUserId(Integer userId) {
 		if(!isUserIdExist(userId)){
 			throw new ServiceException(ResultCodeEnum.PARAM_IS_ERROR);
 		}
 		return userMapper.selectByUserId(userId);
 	}
-
+	/**
+	* @description: 这里为什么不直接从JWT获取登录用户的ID，从而查询信息呢？
+	 * 因为这个接口也可能是别人查询这个人的信息使用。
+	 * 是自己和不是自己返回的信息不同
+	* @param: [int]
+	* @return: com.nicebao.chatroom.model.UserDTO
+	* @author: IhaveBB
+	* @date: 2024/9/25
+	**/
+	public UserDTO getUserProfile(int userId) {
+		//获取登录用户的Id。
+		Integer loginUserId = getUserInfo().getUserId();
+		//根据传入的Id查找用户信息,接下来封装到DTO中
+		User user = selectByUserId(userId);
+		UserDTO userDTO = new UserDTO(user,loginUserId == userId);
+		log.info("UserService:getUserProfile:UserDTO:{}",userDTO.getUsername());
+		return userDTO;
+	}
 }

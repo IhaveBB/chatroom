@@ -8,7 +8,7 @@
     <insert id="addMessageSessionUser">
         insert into message_session_user values(#{sessionId}, #{userId})
     </insert>
-    <!--    需要注意按照时间来排序，如果不排序写括号里的即可-->
+
     <select id="getMessageSessionListByUserId" resultType="integer">
         select sessionId from message_session
         where sessionId in

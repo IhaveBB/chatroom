@@ -5,16 +5,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("redis")
+@RequestMapping("/redis")
 public class RedisControllerTest {
 
-	private final RedisTemplate redisTemplate;
+	RedisTemplate<String, Object> redisTemplate;
 
 	public RedisControllerTest(RedisTemplate redisTemplate) {
 		this.redisTemplate = redisTemplate;
 	}
 
-	@GetMapping("save")
+	@GetMapping("/save")
 	public void save(String key, String value){
 		redisTemplate.opsForValue().set(key, value);
 	}

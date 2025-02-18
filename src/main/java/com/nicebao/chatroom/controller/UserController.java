@@ -6,6 +6,7 @@ import com.nicebao.chatroom.dto.RegisterRequest;
 import com.nicebao.chatroom.enums.ResultCodeEnum;
 import com.nicebao.chatroom.model.Friend;
 import com.nicebao.chatroom.model.User;
+import com.nicebao.chatroom.model.UserDTO;
 import com.nicebao.chatroom.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,13 +50,24 @@ public class UserController {
 		return ResponseResult.success(ret);
 	}
 	@GetMapping("/userInfo")
+	/**
+	* @description: 这里返回的仅仅是name和Id
+	* @param: []
+	* @return: com.nicebao.chatroom.common.ResponseResult<com.nicebao.chatroom.model.User>
+	* @author: IhaveBB
+	* @date: 2024/9/24
+	**/
 	public ResponseResult<User> getUserInfo(){
 		User user = userService.getUserInfo();
 		return ResponseResult.success(user);
 	}
-	/**
-	* LJBTODO: 2024/9/20 11:52 IhaveBB 个人信息修改页面待完成
-	*/
+
+	// 展示用户资料
+	@GetMapping("/getUserProfile")
+	public ResponseResult<UserDTO> getUserProfile(@RequestParam int userId) {
+		UserDTO userDTO = userService.getUserProfile(userId);
+		return ResponseResult.success(userDTO);
+	}
 
 
 }

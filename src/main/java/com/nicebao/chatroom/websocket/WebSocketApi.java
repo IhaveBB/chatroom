@@ -38,7 +38,7 @@ public class WebSocketApi extends TestWebSocketApi {
 	@Autowired
 	private MessageService messageService;
 
-	private final ObjectMapper objectMapper = new ObjectMapper(); // 使用final修饰，确保不可变
+	private final ObjectMapper objectMapper = new ObjectMapper();
 
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -53,7 +53,7 @@ public class WebSocketApi extends TestWebSocketApi {
 
 	@Override
 	public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
-		log.error("[WebSocketAPI] 连接异常!", exception); // 使用error级别记录异常信息
+		log.error("[WebSocketAPI] 连接异常!", exception);
 
 		User user = (User) session.getAttributes().get("user");
 		if (user != null) {
@@ -83,7 +83,7 @@ public class WebSocketApi extends TestWebSocketApi {
 			if ("message".equals(req.getType())) {
 				handleMessages(user, req);
 			} else {
-				log.warn("WebSocketApi:handleTextMessage Error type!=message"); // 使用warn记录非期望情况
+				log.warn("WebSocketApi:handleTextMessage Error type!=message");
 			}
 		} catch (IOException e) {
 			log.error("WebSocketApi:消息处理失败", e);
@@ -112,14 +112,15 @@ public class WebSocketApi extends TestWebSocketApi {
 		message.setFromId(fromUser.getUserId());
 		message.setSessionId(req.getSessionId());
 		message.setContent(req.getContent());
+
 		int ret = messageService.addMessage(message);
 		if (ret <= 0) {
-			log.error("消息写入数据库失败"); // 改为error级别
+			log.error("消息写入数据库失败");
 		}
 
 		for (Friend friend : friends) {
 			WebSocketSession webSocketSession = onlineUserManager.getSession(friend.getFriendId());
-			if (webSocketSession != null && webSocketSession.isOpen()) { // 检查WebSocket连接是否打开
+			if (webSocketSession != null && webSocketSession.isOpen()) {
 				webSocketSession.sendMessage(new TextMessage(responseJson));
 			} else {
 				log.warn("UserId:{} 的WebSocket连接未打开或不存在", friend.getFriendId());
